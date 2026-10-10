@@ -101,6 +101,9 @@
         th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
         th { background: #f8fafc; color: var(--text-sub); font-weight: 600; }
 
+        /* STATISTIK TAMPILAN FOOTER TABEL */
+        .stat-footer-row td { background-color: #f8fafc; border-top: 1px solid var(--border-color); }
+
         /* REKAPITULASI EXCEL FORMAT */
         .excel-wrapper { overflow-x: auto; background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
         .excel-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; font-family: Arial, sans-serif; }
@@ -280,7 +283,7 @@
             <!-- TABEL RINGKASAN PERFORMA DAN RINGKASAN KKM KANAN BAWAH -->
             <div class="extra-box-full">
                 <div class="chart-card-title" style="margin-bottom:12px;">🏆 Performa Siswa Nilai Tertinggi & Predikat</div>
-                <div style="max-height:280px; overflow-y:auto;">
+                <div style="max-height:360px; overflow-y:auto;">
                     <table>
                         <thead>
                             <tr>
@@ -288,10 +291,10 @@
                                 <th>Siswa Nilai Tertinggi</th>
                                 <th style="text-align:center; min-width:220px;" colspan="2">Nilai</th>
                                 <th style="text-align:center;">Predikat</th>
-                                <th style="text-align:right; width:220px;">Keterangan / Statistik</th>
                             </tr>
                         </thead>
                         <tbody id="tbody-predikat-siswa"></tbody>
+                        <tfoot id="tfoot-summary-stats"></tfoot>
                     </table>
                 </div>
             </div>
@@ -533,7 +536,7 @@
 
         let siswaDb = [
             {
-                nisn: "0078912345", nama: "Ahmad Raihan", jenjang: "MTs", kelas: "IX-A",
+                nisn: "0078912345", nama: "Adnan", jenjang: "MTs", kelas: "IX-A",
                 rapor: { "Al-Qur'an Hadis": [85,86,84,88,85,86], "Akidah Akhlak": [88,87,85,89,88,86] },
                 um: { "Al-Qur'an Hadis": 85, "Akidah Akhlak": 88 }
             },
@@ -822,26 +825,21 @@
                 `;
             });
 
-            /* RENDER TABEL PERFORMA SISWA LENGKAP DENGAN RINGKASAN KKM KANAN BAWAH */
+            /* RENDER TABEL PERFORMA SISWA DENGAN FOOTER RINGKASAN PERSIS SEPERTI GAMBAR CONTOH */
             const tbodyPred = document.getElementById('tbody-predikat-siswa');
+            const tfootStats = document.getElementById('tfoot-summary-stats');
             tbodyPred.innerHTML = '';
+            tfootStats.innerHTML = '';
 
             let sortedSiswa = [...siswaDb].sort((a,b) => (b.na||0) - (a.na||0));
 
             if (sortedSiswa.length === 0) {
-                tbodyPred.innerHTML = '<tr><td colspan="6" style="color:var(--text-sub); text-align:center;">Belum ada data siswa.</td></tr>';
+                tbodyPred.innerHTML = '<tr><td colspan="5" style="color:var(--text-sub); text-align:center;">Belum ada data siswa.</td></tr>';
             } else {
                 sortedSiswa.forEach((s, i) => {
                     const pred = getPredikat(s.na || 0);
                     const valNum = (s.na || 0).toFixed(2);
                     const valText = terbilangAngka(s.na || 0);
-
-                    /* STATISTIK KANAN BAWAH SESUAI SKETSA GAMBAR */
-                    let statBox = '';
-                    if (i === 0) statBox = `<div style="font-size:0.8rem; color:var(--text-sub);">KKM Minimal: <strong style="color:var(--text-title);">${appConfig.kkm}</strong></div>`;
-                    else if (i === 1) statBox = `<div style="font-size:0.8rem; color:var(--text-sub);">Nilai Rata-Rata: <strong style="color:var(--primary-blue);">${avgOverall.toFixed(2)}</strong></div>`;
-                    else if (i === 2) statBox = `<div style="font-size:0.8rem; color:var(--text-sub);">Nilai Tertinggi: <strong style="color:#10b981;">${(maxNa === -Infinity ? 0 : maxNa).toFixed(2)}</strong></div>`;
-                    else if (i === 3) statBox = `<div style="font-size:0.8rem; color:var(--text-sub);">Nilai Terendah: <strong style="color:#dc2626;">${(minNa === Infinity ? 0 : minNa).toFixed(2)}</strong></div>`;
 
                     tbodyPred.innerHTML += `
                         <tr>
@@ -850,10 +848,32 @@
                             <td style="text-align:center; font-weight:700; color:var(--primary-blue); width:90px;">${valNum}</td>
                             <td style="text-align:left; font-size:0.8rem; color:var(--text-sub); font-style:italic;">${valText}</td>
                             <td style="text-align:center;"><span style="background:${pred.bg}; color:${pred.color}; padding:3px 10px; border-radius:12px; font-weight:700; font-size:0.75rem;">${pred.text}</span></td>
-                            <td style="text-align:right;">${statBox}</td>
                         </tr>
                     `;
                 });
+
+                /* DITAMBAHKAN FOOTER KANAN BAWAH PERSIS DESAIN SKETSA EXCEL */
+                const realMin = minNa === Infinity ? 0 : minNa;
+                const realMax = maxNa === -Infinity ? 0 : maxNa;
+
+                tfootStats.innerHTML = `
+                    <tr class="stat-footer-row">
+                        <td colspan="4" style="text-align:right; font-weight:600; color:var(--text-sub);">KKM:</td>
+                        <td style="text-align:center; font-weight:700; color:var(--text-title);">${appConfig.kkm}</td>
+                    </tr>
+                    <tr class="stat-footer-row">
+                        <td colspan="4" style="text-align:right; font-weight:600; color:var(--text-sub);">Nilai Rata-Rata:</td>
+                        <td style="text-align:center; font-weight:700; color:var(--primary-blue);">${avgOverall.toFixed(2)}</td>
+                    </tr>
+                    <tr class="stat-footer-row">
+                        <td colspan="4" style="text-align:right; font-weight:600; color:var(--text-sub);">Nilai Tertinggi:</td>
+                        <td style="text-align:center; font-weight:700; color:#10b981;">${realMax.toFixed(2)}</td>
+                    </tr>
+                    <tr class="stat-footer-row">
+                        <td colspan="4" style="text-align:right; font-weight:600; color:var(--text-sub);">Nilai Terendah:</td>
+                        <td style="text-align:center; font-weight:700; color:#dc2626;">${realMin.toFixed(2)}</td>
+                    </tr>
+                `;
             }
         }
 
