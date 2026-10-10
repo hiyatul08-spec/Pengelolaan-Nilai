@@ -83,10 +83,9 @@
         .bar-col-lbl { font-size: 0.75rem; color: var(--text-sub); margin-top: 8px; font-weight: 500; }
 
         /* ELEMEN RINGKASAN DASHBOARD */
-        .grid-extra-dash { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; }
+        .grid-extra-dash { display: grid; grid-template-columns: 1fr 1.3fr; gap: 20px; }
         .extra-box { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
-        .top-student-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--border-color); cursor: pointer; border-radius: 8px; transition: background 0.2s; }
-        .top-student-item:hover { background-color: #f1f5f9; }
+        .top-student-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--border-color); }
         .top-student-item:last-child { border-bottom: none; }
         .rank-badge { width: 28px; height: 28px; border-radius: 50%; background: #fef3c7; color: #b45309; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
 
@@ -282,21 +281,24 @@
                 </div>
             </div>
 
-            <!-- RINGKASAN TAMBAHAN BERDASARKAN GAMBAR DESAIN KAMU -->
+            <!-- RINGKASAN TAMBAHAN DENGAN POLA SESUAI PERMINTAAN -->
             <div class="grid-extra-dash">
+                <!-- SEBELAH KIRI: KHUSUS NAMA SISWA SAJA -->
                 <div class="extra-box">
-                    <div class="chart-card-title" style="margin-bottom:12px;">🏆 Top 3 Siswa Nilai Tertinggi (Klik untuk Edit)</div>
+                    <div class="chart-card-title" style="margin-bottom:12px;">🏆 Top 3 Siswa Nilai Tertinggi</div>
                     <div id="top-students-list"></div>
                 </div>
+
+                <!-- SEBELAH KANAN: TABEL NAMA, NILAI ANGKA & HURUF, SERTA PREDIKAT -->
                 <div class="extra-box">
                     <div class="chart-card-title" style="margin-bottom:12px;">📋 Performa Siswa & Predikat</div>
                     <div style="max-height:190px; overflow-y:auto;">
                         <table style="margin-top:0;">
                             <thead>
                                 <tr>
-                                    <th>Siswa Nilai Tertinggi</th>
+                                    <th>Nama Siswa</th>
                                     <th style="text-align:center;">Nilai Rata-Rata</th>
-                                    <th style="text-align:center;">Predikat</th>
+                                    <th style="text-align:right;">Predikat</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-predikat-siswa"></tbody>
@@ -734,6 +736,28 @@
             saveDb();
         }
 
+        /* FUNGSI CONVERT ANGKA KE TERBILANG HURUF */
+        function terbilangAngka(nilai) {
+            const intPart = Math.floor(nilai);
+            const decPart = Math.round((nilai - intPart) * 100);
+
+            const kata = ["Nol", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+            
+            function convert(n) {
+                if (n < 12) return kata[n];
+                if (n < 20) return convert(n - 10) + " Belas";
+                if (n < 100) return convert(Math.floor(n / 10)) + " Puluh " + (n % 10 !== 0 ? convert(n % 10) : "");
+                if (n === 100) return "Seratus";
+                return n.toString();
+            }
+
+            let hasil = convert(intPart);
+            if (decPart > 0) {
+                hasil += " Koma " + decPart.toString().split('').map(d => kata[parseInt(d)]).join(' ');
+            }
+            return hasil;
+        }
+
         /* FUNGSI PENENTU PREDIKAT */
         function getPredikat(val) {
             if (val >= 91) return { text: 'Sangat Baik', color: '#10b981', bg: '#dcfce7' };
@@ -801,7 +825,7 @@
                 `;
             });
 
-            /* RENDER TOP 3 SISWA */
+            /* SEBELAH KIRI: KHUSUS NAMA SISWA KELIHATAN BERSIH (TANPA NIM/JENJANG/EDIT) */
             const topBox = document.getElementById('top-students-list');
             topBox.innerHTML = '';
             let sortedSiswa = [...siswaDb].sort((a,b) => (b.na||0) - (a.na||0));
@@ -810,14 +834,12 @@
                 topBox.innerHTML = '<div style="font-size:0.85rem; color:var(--text-sub);">Belum ada data siswa.</div>';
             } else {
                 sortedSiswa.slice(0, 3).forEach((s, i) => {
-                    const dbIndex = siswaDb.findIndex(x => x.nisn === s.nisn);
                     topBox.innerHTML += `
-                        <div class="top-student-item" onclick="editSiswa(${dbIndex})" title="Klik untuk edit nilai ${s.nama}">
+                        <div class="top-student-item">
                             <div style="display:flex; align-items:center;">
                                 <div class="rank-badge">${i+1}</div>
                                 <div>
-                                    <div style="font-weight:700; font-size:0.875rem;">${s.nama}</div>
-                                    <div style="font-size:0.75rem; color:var(--text-sub);">NISN: ${s.nisn} | Jenjang: ${s.jenjang||'MTs'}</div>
+                                    <div style="font-weight:700; font-size:0.95rem;">${s.nama}</div>
                                 </div>
                             </div>
                             <div style="font-weight:700; color:var(--primary-blue); font-size:1.05rem;">${(s.na||0).toFixed(2)}</div>
@@ -826,7 +848,7 @@
                 });
             }
 
-            /* RENDER TABEL PERFORMA SISWA & PREDIKAT (DENGAN SCROLL) */
+            /* SEBELAH KANAN: TABEL NAMA, NILAI ANGKA & HURUF, SERTA PREDIKAT */
             const tbodyPred = document.getElementById('tbody-predikat-siswa');
             tbodyPred.innerHTML = '';
 
@@ -835,11 +857,17 @@
             } else {
                 sortedSiswa.forEach((s) => {
                     const pred = getPredikat(s.na || 0);
+                    const valNum = (s.na || 0).toFixed(2);
+                    const valText = terbilangAngka(s.na || 0);
+
                     tbodyPred.innerHTML += `
                         <tr>
                             <td><strong>${s.nama}</strong></td>
-                            <td style="text-align:center;"><strong style="color:var(--primary-blue);">${(s.na || 0).toFixed(2)}</strong></td>
-                            <td style="text-align:center;"><span style="background:${pred.bg}; color:${pred.color}; padding:3px 10px; border-radius:12px; font-weight:700; font-size:0.75rem;">${pred.text}</span></td>
+                            <td style="text-align:center;">
+                                <div style="font-weight:700; color:var(--primary-blue);">${valNum}</div>
+                                <div style="font-size:0.725rem; color:var(--text-sub); margin-top:2px; font-style:italic;">(${valText})</div>
+                            </td>
+                            <td style="text-align:right;"><span style="background:${pred.bg}; color:${pred.color}; padding:3px 10px; border-radius:12px; font-weight:700; font-size:0.75rem;">${pred.text}</span></td>
                         </tr>
                     `;
                 });
