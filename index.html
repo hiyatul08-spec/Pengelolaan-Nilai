@@ -982,6 +982,7 @@
             }
         }
 
+        /* FUNGSI REKAPITULASI: KOLOM JENJANG DIGANTI MENJADI NISN */
         function renderRekapitulasiTable() {
             document.getElementById('rekap-title-school').innerText = `REKAPITULASI NILAI AKHIR (NILAI IJAZAH) PESERTA ASISMEN MADRASAH (AM) ${appConfig.nama.toUpperCase()}`;
             document.getElementById('rekap-title-tp').innerText = `TAHUN PELAJARAN ${appConfig.tp}`;
@@ -991,7 +992,7 @@
             const tfoot = document.getElementById('rekap-tfoot');
             const count = mapelList.length;
 
-            let h1 = `<tr><th rowspan="2" style="width:30px;">NO.</th><th rowspan="2" style="min-width:160px;">NAMA</th><th rowspan="2">JENJANG</th><th colspan="${count}">MATA PELAJARAN</th><th rowspan="2" class="v-text">JUMLAH</th><th rowspan="2" class="v-text">RATA-RATA</th><th rowspan="2" class="v-text">RANKING</th></tr>`;
+            let h1 = `<tr><th rowspan="2" style="width:30px;">NO.</th><th rowspan="2" style="min-width:160px;">NAMA</th><th rowspan="2">NISN</th><th colspan="${count}">MATA PELAJARAN</th><th rowspan="2" class="v-text">JUMLAH</th><th rowspan="2" class="v-text">RATA-RATA</th><th rowspan="2" class="v-text">RANKING</th></tr>`;
             let h2 = `<tr>`;
             mapelList.forEach(m => h2 += `<th class="v-text">${m}</th>`);
             h2 += `</tr>`;
@@ -1012,7 +1013,7 @@
             }
 
             filteredRekap.forEach((s, idx) => {
-                let row = `<tr><td>${idx+1}</td><td class="text-left"><strong>${s.nama}</strong></td><td>${s.jenjang || 'MTs'}</td>`;
+                let row = `<tr><td>${idx+1}</td><td class="text-left"><strong>${s.nama}</strong></td><td>${s.nisn}</td>`;
                 mapelList.forEach(m => {
                     const val = s.mapelNA[m] || 0;
                     row += `<td>${val.toFixed(1)}</td>`;
@@ -1091,12 +1092,12 @@
 
         function exportRekapCSV() {
             let csv = "data:text/csv;charset=utf-8,";
-            csv += `"${appConfig.nama.toUpperCase()}"\n"REKAPITULASI NILAI AKHIR"\n\nNO,NISN,NAMA,JENJANG,` + mapelList.join(",") + ",JUMLAH,RATA-RATA,RANKING\n";
+            csv += `"${appConfig.nama.toUpperCase()}"\n"REKAPITULASI NILAI AKHIR"\n\nNO,NISN,NAMA,` + mapelList.join(",") + ",JUMLAH,RATA-RATA,RANKING\n";
             
             let filteredExport = siswaDb.filter(s => selectedJenjangActive === 'ALL' || (s.jenjang || 'MTs') === selectedJenjangActive);
             
             filteredExport.forEach((s, i) => {
-                let row = [i+1, `"${s.nisn}"`, `"${s.nama}"`, `"${s.jenjang||'MTs'}"`];
+                let row = [i+1, `"${s.nisn}"`, `"${s.nama}"`];
                 mapelList.forEach(m => row.push((s.mapelNA[m]||0).toFixed(1)));
                 row.push(s.totalNA.toFixed(1), s.na.toFixed(1), s.rank);
                 csv += row.join(",") + "\n";
