@@ -146,9 +146,9 @@
             <div class="nav-menu">
                 <button class="nav-btn active" onclick="showPage('page-dashboard', this)">📊 Dashboard</button>
                 
-                <!-- MASTER DATA DENGAN SUB-MENU SUB-JENJANG -->
-                <button class="nav-btn" id="btn-master-parent" onclick="toggleSubMenu('sub-master', this)">🎓 Master Data & Nilai <span id="arrow-master" style="float:right; font-size:0.75rem;">▼</span></button>
-                <div id="sub-master" class="sub-menu" style="display: none; padding-left: 20px;">
+                <!-- MASTER DATA DENGAN SUB-MENU SIDEBAR -->
+                <button class="nav-btn" id="btn-master-parent" onclick="toggleSubMenu('sub-master', this)">🎓 Master Data & Nilai <span id="arrow-master" style="float:right; font-size:0.75rem;">▲</span></button>
+                <div id="sub-master" class="sub-menu" style="display: block; padding-left: 20px;">
                     <button class="nav-btn sub-btn" onclick="filterByJenjangSidebar('MI', this)">▸ Jenjang MI</button>
                     <button class="nav-btn sub-btn" onclick="filterByJenjangSidebar('MTs', this)">▸ Jenjang MTs</button>
                     <button class="nav-btn sub-btn" onclick="filterByJenjangSidebar('MA', this)">▸ Jenjang MA</button>
@@ -426,6 +426,8 @@
     </div>
 
     <script>
+        let selectedJenjangActive = 'ALL';
+
         let mapelList = ['Al-Qur\'an Hadis', 'Akidah Akhlak', 'Fikih', 'Sejarah Kebudayaan Islam (SKI)', 'Pendidikan Pancasila', 'Bahasa Indonesia', 'Bahasa Arab', 'Matematika', 'IPA', 'IPS', 'Bahasa Inggris', 'Seni Budaya', 'PJOK', 'Prakarya'];
         
         let appConfig = {
@@ -464,19 +466,28 @@
             const isOpen = sub.style.display === 'block';
             sub.style.display = isOpen ? 'none' : 'block';
             arrow.innerText = isOpen ? '▼' : '▲';
+            selectedJenjangActive = 'ALL';
+            
+            const filterSelect = document.getElementById('filter-jenjang');
+            if (filterSelect) filterSelect.value = 'ALL';
+
+            document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active-sub'));
             showPage('page-master-siswa', btnEl);
         }
 
         function filterByJenjangSidebar(jenjang, btnEl) {
+            selectedJenjangActive = jenjang;
             showPage('page-master-siswa', document.getElementById('btn-master-parent'));
+            
             document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active-sub'));
             if (btnEl) btnEl.classList.add('active-sub');
 
             const filterSelect = document.getElementById('filter-jenjang');
             if (filterSelect) {
                 filterSelect.value = jenjang;
-                renderSiswaTable();
             }
+
+            renderSiswaTable();
         }
 
         function showPage(pageId, btnEl) {
@@ -486,6 +497,7 @@
             if (btnEl) btnEl.classList.add('active');
 
             if (pageId !== 'page-master-siswa') {
+                selectedJenjangActive = 'ALL';
                 document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active-sub'));
             }
 
@@ -661,15 +673,26 @@
 
         function renderSiswaTable() {
             const search = document.getElementById('search-input').value.toLowerCase();
-            const filterJenjang = document.getElementById('filter-jenjang').value;
-            const filterStatus = document.getElementById('filter-status').value;
+            const filterSelect = document.getElementById('filter-jenjang');
+            if (filterSelect) {
+                selectedJenjangActive = filterSelect.value;
+            }
 
+            // Otomatis tandai menu sidebar kiri sesuai pilihan dropdown
+            document.querySelectorAll('.sub-menu .sub-btn').forEach(btn => {
+                btn.classList.remove('active-sub');
+                if (selectedJenjangActive !== 'ALL' && btn.innerText.includes(selectedJenjangActive)) {
+                    btn.classList.add('active-sub');
+                }
+            });
+
+            const filterStatus = document.getElementById('filter-status').value;
             const tbody = document.getElementById('tbody-siswa');
             tbody.innerHTML = '';
 
             let filtered = siswaDb.filter(s => {
                 const matchSearch = (s.nama || '').toLowerCase().includes(search) || (s.nisn || '').includes(search);
-                const matchJenjang = filterJenjang === 'ALL' || (s.jenjang || 'MTs') === filterJenjang;
+                const matchJenjang = selectedJenjangActive === 'ALL' || (s.jenjang || 'MTs') === selectedJenjangActive;
                 const matchStatus = filterStatus === 'ALL' || s.status === filterStatus;
                 return matchSearch && matchJenjang && matchStatus;
             });
@@ -707,8 +730,7 @@
             document.getElementById('edit-index').value = editIdx;
             document.getElementById('modal-siswa').classList.add('active');
             
-            const filterJ = document.getElementById('filter-jenjang') ? document.getElementById('filter-jenjang').value : 'MTs';
-            const defaultJ = filterJ === 'ALL' ? 'MTs' : filterJ;
+            const defaultJ = selectedJenjangActive === 'ALL' ? 'MTs' : selectedJenjangActive;
             document.getElementById('in-jenjang').value = defaultJ;
 
             if (editIdx >= 0) {
@@ -909,13 +931,15 @@
 
             let gTotal = 0, gRata = 0;
 
-            if (siswaDb.length === 0) {
+            let filteredRekap = siswaDb.filter(s => selectedJenjangActive === 'ALL' || (s.jenjang || 'MTs') === selectedJenjangActive);
+
+            if (filteredRekap.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="${count + 6}">Belum ada data siswa.</td></tr>`;
                 tfoot.innerHTML = '';
                 return;
             }
 
-            siswaDb.forEach((s, idx) => {
+            filteredRekap.forEach((s, idx) => {
                 let row = `<tr><td>${idx+1}</td><td class="text-left"><strong>${s.nama}</strong></td><td>${s.jenjang || 'MTs'}</td>`;
                 mapelList.forEach(m => {
                     const val = s.mapelNA[m] || 0;
@@ -930,7 +954,7 @@
                 tbody.innerHTML += row;
             });
 
-            const totalSiswa = siswaDb.length;
+            const totalSiswa = filteredRekap.length;
             let fHtml = `<tr><td colspan="3" style="font-weight:bold; text-align:left;">JUMLAH NILAI</td>`;
             mapelList.forEach(m => fHtml += `<td style="font-weight:bold;">${mTotals[m].toFixed(1)}</td>`);
             fHtml += `<td style="font-weight:bold;">${gTotal.toFixed(1)}</td><td style="font-weight:bold;">${gRata.toFixed(1)}</td><td>-</td></tr>`;
@@ -996,7 +1020,10 @@
         function exportRekapCSV() {
             let csv = "data:text/csv;charset=utf-8,";
             csv += `"${appConfig.nama.toUpperCase()}"\n"REKAPITULASI NILAI AKHIR"\n\nNO,NISN,NAMA,JENJANG,` + mapelList.join(",") + ",JUMLAH,RATA-RATA,RANKING\n";
-            siswaDb.forEach((s, i) => {
+            
+            let filteredExport = siswaDb.filter(s => selectedJenjangActive === 'ALL' || (s.jenjang || 'MTs') === selectedJenjangActive);
+            
+            filteredExport.forEach((s, i) => {
                 let row = [i+1, `"${s.nisn}"`, `"${s.nama}"`, `"${s.jenjang||'MTs'}"`];
                 mapelList.forEach(m => row.push((s.mapelNA[m]||0).toFixed(1)));
                 row.push(s.totalNA.toFixed(1), s.na.toFixed(1), s.rank);
