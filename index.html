@@ -82,7 +82,7 @@
         .bar-col-val { font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; }
         .bar-col-lbl { font-size: 0.75rem; color: var(--text-sub); margin-top: 8px; font-weight: 500; }
 
-        /* ELEMEN RINGKASAN DASHBOARD DENGAN TABEL RAPAT & RINGKAS */
+        /* ELEMEN RINGKASAN DASHBOARD SANGAT RAPAT */
         .extra-box-full { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
 
         .card-table { background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); margin-bottom: 20px; }
@@ -97,13 +97,13 @@
         .btn-amber { background: #d97706; color: white; }
         .btn-sm { padding: 4px 8px; font-size: 0.78rem; border-radius: 6px; }
 
-        /* TABEL COMPACT / RAPAT ELEGAN */
-        table { width: 100%; border-collapse: collapse; margin-top: 4px; }
-        th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.825rem; }
+        /* TABEL SANGAT COMPACT & RAPAT PRESISI */
+        table { width: 100%; border-collapse: collapse; margin-top: 4px; table-layout: auto; }
+        th, td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.825rem; white-space: nowrap; }
         th { background: #f8fafc; color: var(--text-sub); font-weight: 600; }
 
-        /* STATISTIK FOOTER RAPAT */
-        .stat-footer-row td { background-color: #f8fafc; border-top: 1px solid var(--border-color); padding: 6px 12px; }
+        /* STATISTIK FOOTER */
+        .stat-footer-row td { background-color: #f8fafc; border-top: 1px solid var(--border-color); padding: 5px 10px; }
 
         /* REKAPITULASI EXCEL FORMAT */
         .excel-wrapper { overflow-x: auto; background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
@@ -281,19 +281,20 @@
                 </div>
             </div>
 
-            <!-- TABEL RINGKASAN PERFORMA DAN RINGKASAN KKM KANAN BAWAH -->
+            <!-- TABEL RINGKASAN PERFORMA DAN RINGKASAN KKM RAPAT PRESISI -->
             <div class="extra-box-full">
                 <div class="chart-card-title" style="margin-bottom:12px;">🏆 Performa Siswa Nilai Tertinggi & Predikat</div>
-                <div style="max-height:360px; overflow-y:auto;">
-                    <table>
+                <div style="max-height:360px; overflow-y:auto; overflow-x:auto;">
+                    <table style="width:auto;">
                         <thead>
                             <tr>
-                                <th style="width:45px; text-align:center;">No</th>
-                                <th>Siswa Nilai Tertinggi</th>
-                                <th style="text-align:center; width:80px;">Nilai</th>
-                                <th style="text-align:left;">Terbilang Huruf</th>
-                                <th style="text-align:center; width:110px;">Predikat</th>
-                                <th style="text-align:center; width:200px;" colspan="2">Ringkasan</th>
+                                <th style="width:40px; text-align:center;">No</th>
+                                <th style="min-width:160px;">Siswa Nilai Tertinggi</th>
+                                <th style="text-align:center; width:70px;">Nilai</th>
+                                <th style="text-align:left; min-width:220px;">Terbilang Huruf</th>
+                                <th style="text-align:center; width:100px;">Predikat</th>
+                                <th style="text-align:left; min-width:130px;">Ringkasan</th>
+                                <th style="text-align:right; width:70px;"></th>
                             </tr>
                         </thead>
                         <tbody id="tbody-predikat-siswa"></tbody>
@@ -848,8 +849,8 @@
                             <td style="text-align:center; font-weight:700; color:var(--primary-blue);">${valNum}</td>
                             <td style="text-align:left; font-size:0.8rem; color:var(--text-sub); font-style:italic;">${valText}</td>
                             <td style="text-align:center;"><span style="background:${pred.bg}; color:${pred.color}; padding:2px 8px; border-radius:12px; font-weight:700; font-size:0.75rem;">${pred.text}</span></td>
-                            <td style="width:110px;"></td>
-                            <td style="width:80px;"></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     `;
                 });
@@ -857,7 +858,7 @@
                 const realMin = minNa === Infinity ? 0 : minNa;
                 const realMax = maxNa === -Infinity ? 0 : maxNa;
 
-                /* TFOOTER SANGAT RAPAT DI KANAN BAWAH */
+                /* TFOOTER SANGAT RAPAT MERAPAT KE KIRI DI SEBELAH PREDIKAT */
                 tfootStats.innerHTML = `
                     <tr class="stat-footer-row">
                         <td colspan="5" style="border:none;"></td>
