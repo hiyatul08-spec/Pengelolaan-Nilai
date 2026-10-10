@@ -57,9 +57,10 @@
         .bg-icon-blue { background-color: #e8f0fe; color: #1a73e8; }
         .bg-icon-yellow { background-color: #fef7e0; color: #b06000; }
         .bg-icon-purple { background-color: #f3e8fd; color: #9334e6; }
-        .stat-info { display: flex; flex-direction: column; }
+        .stat-info { display: flex; flex-direction: column; width: 100%; }
         .stat-label-modern { font-size: 0.8rem; color: var(--text-sub); font-weight: 500; margin-bottom: 4px; }
         .stat-value-modern { font-size: 1.4rem; font-weight: 700; color: var(--text-title); }
+        .stat-sub-text { font-size: 0.725rem; color: var(--text-sub); margin-top: 2px; font-weight: 600; }
 
         /* CHARTS GRID */
         .grid-charts { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; margin-bottom: 20px; }
@@ -82,9 +83,10 @@
         .bar-col-lbl { font-size: 0.75rem; color: var(--text-sub); margin-top: 8px; font-weight: 500; }
 
         /* ELEMEN RINGKASAN DASHBOARD */
-        .grid-extra-dash { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-extra-dash { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; }
         .extra-box { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
-        .top-student-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-color); }
+        .top-student-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--border-color); cursor: pointer; border-radius: 8px; transition: background 0.2s; }
+        .top-student-item:hover { background-color: #f1f5f9; }
         .top-student-item:last-child { border-bottom: none; }
         .rank-badge { width: 28px; height: 28px; border-radius: 50%; background: #fef3c7; color: #b45309; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
 
@@ -231,6 +233,7 @@
                     <div class="stat-info">
                         <span class="stat-label-modern">Total Siswa</span>
                         <span class="stat-value-modern" id="stat-total">0 Siswa</span>
+                        <span class="stat-sub-text" id="stat-total-sub">Terdaftar</span>
                     </div>
                 </div>
                 <div class="stat-card-modern">
@@ -238,6 +241,7 @@
                     <div class="stat-info">
                         <span class="stat-label-modern">Rata-Rata Nilai</span>
                         <span class="stat-value-modern" id="stat-rata">0.00</span>
+                        <span class="stat-sub-text" id="stat-rata-range" style="color:var(--primary-blue);">Min: 0 | Max: 0</span>
                     </div>
                 </div>
                 <div class="stat-card-modern">
@@ -245,6 +249,7 @@
                     <div class="stat-info">
                         <span class="stat-label-modern">Siswa Lulus</span>
                         <span class="stat-value-modern" id="stat-lulus">0 Siswa</span>
+                        <span class="stat-sub-text" id="stat-lulus-pct" style="color:#10b981;">0% Dari Total</span>
                     </div>
                 </div>
                 <div class="stat-card-modern">
@@ -252,6 +257,7 @@
                     <div class="stat-info">
                         <span class="stat-label-modern">Total Mapel</span>
                         <span class="stat-value-modern" id="stat-mapel-count">0 Mapel</span>
+                        <span class="stat-sub-text">Aktif Diuji</span>
                     </div>
                 </div>
             </div>
@@ -276,23 +282,24 @@
                 </div>
             </div>
 
-            <!-- RINGKASAN TAMBAHAN PER MAPEL LEBIH PAS SANGAT RAPI -->
+            <!-- RINGKASAN TAMBAHAN BERDASARKAN GAMBAR DESAIN KAMU -->
             <div class="grid-extra-dash">
                 <div class="extra-box">
-                    <div class="chart-card-title" style="margin-bottom:12px;">🏆 Top 3 Siswa Nilai Tertinggi</div>
+                    <div class="chart-card-title" style="margin-bottom:12px;">🏆 Top 3 Siswa Nilai Tertinggi (Klik untuk Edit)</div>
                     <div id="top-students-list"></div>
                 </div>
                 <div class="extra-box">
-                    <div class="chart-card-title" style="margin-bottom:12px;">📚 Rata-Rata Nilai Per Mapel</div>
-                    <div style="max-height:180px; overflow-y:auto;">
+                    <div class="chart-card-title" style="margin-bottom:12px;">📋 Performa Siswa & Predikat</div>
+                    <div style="max-height:190px; overflow-y:auto;">
                         <table style="margin-top:0;">
                             <thead>
                                 <tr>
-                                    <th>Mata Pelajaran</th>
-                                    <th style="text-align:right;">Rata-Rata Kelas</th>
+                                    <th>Siswa Nilai Tertinggi</th>
+                                    <th style="text-align:center;">Nilai Rata-Rata</th>
+                                    <th style="text-align:center;">Predikat</th>
                                 </tr>
                             </thead>
-                            <tbody id="tbody-summary-jenjang"></tbody>
+                            <tbody id="tbody-predikat-siswa"></tbody>
                         </table>
                     </div>
                 </div>
@@ -727,16 +734,30 @@
             saveDb();
         }
 
+        /* FUNGSI PENENTU PREDIKAT */
+        function getPredikat(val) {
+            if (val >= 91) return { text: 'Sangat Baik', color: '#10b981', bg: '#dcfce7' };
+            if (val >= 81) return { text: 'Baik', color: '#2563eb', bg: '#dbeafe' };
+            if (val >= 75) return { text: 'Cukup', color: '#d97706', bg: '#fef3c7' };
+            return { text: 'Kurang', color: '#dc2626', bg: '#fee2e2' };
+        }
+
         function renderDashboard() {
             const total = siswaDb.length;
             let sumNa = 0, lulus = 0, remedi = 0;
             const dist = { '< 70': 0, '70-79': 0, '80-89': 0, '90-100': 0 };
 
+            let minNa = Infinity;
+            let maxNa = -Infinity;
+
             siswaDb.forEach(s => {
-                sumNa += s.na || 0;
+                const val = s.na || 0;
+                sumNa += val;
                 if (s.status === 'LULUS') lulus++; else remedi++;
 
-                const val = s.na || 0;
+                if (val < minNa) minNa = val;
+                if (val > maxNa) maxNa = val;
+
                 if (val < 70) dist['< 70']++;
                 else if (val < 80) dist['70-79']++;
                 else if (val < 90) dist['80-89']++;
@@ -744,11 +765,22 @@
             });
 
             document.getElementById('stat-total').innerText = `${total} Siswa`;
-            document.getElementById('stat-rata').innerText = total > 0 ? (sumNa / total).toFixed(2) : '0.00';
+            const avgOverall = total > 0 ? (sumNa / total) : 0;
+            document.getElementById('stat-rata').innerText = avgOverall.toFixed(2);
+            
+            const elRataRange = document.getElementById('stat-rata-range');
+            if (total > 0) {
+                elRataRange.innerText = `Min: ${minNa.toFixed(1)} | Max: ${maxNa.toFixed(1)}`;
+            } else {
+                elRataRange.innerText = `Min: 0 | Max: 0`;
+            }
+
             document.getElementById('stat-lulus').innerText = `${lulus} Siswa`;
+            const pctLulus = total > 0 ? Math.round((lulus / total) * 100) : 0;
+            document.getElementById('stat-lulus-pct').innerText = `${pctLulus}% Dari Total`;
+            
             document.getElementById('stat-mapel-count').innerText = `${mapelList.length} Mapel`;
 
-            const pctLulus = total > 0 ? Math.round((lulus / total) * 100) : 0;
             const donutEl = document.getElementById('donut-chart-element');
             donutEl.style.setProperty('--p-lulus', `${pctLulus}%`);
             document.getElementById('donut-center-pct').innerText = `${pctLulus}%`;
@@ -772,13 +804,15 @@
             /* RENDER TOP 3 SISWA */
             const topBox = document.getElementById('top-students-list');
             topBox.innerHTML = '';
-            let sortedSiswa = [...siswaDb].sort((a,b) => (b.na||0) - (a.na||0)).slice(0, 3);
+            let sortedSiswa = [...siswaDb].sort((a,b) => (b.na||0) - (a.na||0));
+            
             if (sortedSiswa.length === 0) {
                 topBox.innerHTML = '<div style="font-size:0.85rem; color:var(--text-sub);">Belum ada data siswa.</div>';
             } else {
-                sortedSiswa.forEach((s, i) => {
+                sortedSiswa.slice(0, 3).forEach((s, i) => {
+                    const dbIndex = siswaDb.findIndex(x => x.nisn === s.nisn);
                     topBox.innerHTML += `
-                        <div class="top-student-item">
+                        <div class="top-student-item" onclick="editSiswa(${dbIndex})" title="Klik untuk edit nilai ${s.nama}">
                             <div style="display:flex; align-items:center;">
                                 <div class="rank-badge">${i+1}</div>
                                 <div>
@@ -792,23 +826,20 @@
                 });
             }
 
-            /* RENDER RATA-RATA NILAI PER MAPEL */
-            const tbodyJ = document.getElementById('tbody-summary-jenjang');
-            tbodyJ.innerHTML = '';
+            /* RENDER TABEL PERFORMA SISWA & PREDIKAT (DENGAN SCROLL) */
+            const tbodyPred = document.getElementById('tbody-predikat-siswa');
+            tbodyPred.innerHTML = '';
 
-            if (siswaDb.length === 0) {
-                tbodyJ.innerHTML = '<tr><td colspan="2" style="color:var(--text-sub); text-align:center;">Belum ada data.</td></tr>';
+            if (sortedSiswa.length === 0) {
+                tbodyPred.innerHTML = '<tr><td colspan="3" style="color:var(--text-sub); text-align:center;">Belum ada data siswa.</td></tr>';
             } else {
-                mapelList.forEach(m => {
-                    let totalVal = 0;
-                    siswaDb.forEach(s => {
-                        totalVal += (s.mapelNA && s.mapelNA[m]) ? s.mapelNA[m] : 0;
-                    });
-                    const avg = (totalVal / siswaDb.length).toFixed(2);
-                    tbodyJ.innerHTML += `
+                sortedSiswa.forEach((s) => {
+                    const pred = getPredikat(s.na || 0);
+                    tbodyPred.innerHTML += `
                         <tr>
-                            <td><strong>${m}</strong></td>
-                            <td style="text-align:right;"><strong style="color:var(--primary-blue);">${avg}</strong></td>
+                            <td><strong>${s.nama}</strong></td>
+                            <td style="text-align:center;"><strong style="color:var(--primary-blue);">${(s.na || 0).toFixed(2)}</strong></td>
+                            <td style="text-align:center;"><span style="background:${pred.bg}; color:${pred.color}; padding:3px 10px; border-radius:12px; font-weight:700; font-size:0.75rem;">${pred.text}</span></td>
                         </tr>
                     `;
                 });
