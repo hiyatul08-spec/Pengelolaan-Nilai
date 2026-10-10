@@ -125,15 +125,52 @@
         .tab-body { padding: 24px; }
         .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; background: #f8fafc; border-radius: 0 0 16px 16px; }
 
-        @media print {
-            body * { visibility: hidden; }
-            #rekap-print-area, #rekap-print-area * { visibility: visible; }
-            #rekap-print-area { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none !important; }
-        }
-    </style>
-</head>
-<body>
+      @media print {
+    @page {
+        size: A4 landscape;
+        margin: 10mm;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    #sidebar, .top-header-card, .no-print, .header-actions {
+        display: none !important;
+    }
+
+    #main-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+    }
+
+    .page-view {
+        display: none !important;
+    }
+
+    #page-rekapitulasi {
+        display: block !important;
+    }
+
+    .excel-wrapper {
+        border: none !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        width: 100% !important;
+    }
+
+    .excel-table {
+        width: 100% !important;
+        font-size: 8pt !important;
+    }
+
+    .excel-table th, .excel-table td {
+        border: 1px solid #000 !important;
+        padding: 4px 2px !important;
+    }
+}
 
     <!-- DARK SIDEBAR -->
     <div id="sidebar">
