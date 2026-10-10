@@ -82,51 +82,52 @@
         .bar-col-val { font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; }
         .bar-col-lbl { font-size: 0.75rem; color: var(--text-sub); margin-top: 8px; font-weight: 500; }
 
-        /* ELEMEN RINGKASAN DASHBOARD DENGAN TABEL FULL */
+        /* ELEMEN RINGKASAN DASHBOARD DENGAN TABEL RAPAT & RINGKAS */
         .extra-box-full { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
 
         .card-table { background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); margin-bottom: 20px; }
-        .form-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; outline: none; }
+        .form-input { width: 100%; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem; outline: none; }
         .form-input:focus { border-color: var(--primary-blue); }
 
-        .btn { padding: 9px 16px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn { padding: 8px 14px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
         .btn-primary { background: var(--primary-blue); color: white; }
         .btn-green { background: #059669; color: white; }
         .btn-outline { background: white; border: 1px solid var(--border-color); color: var(--text-title); }
         .btn-danger { background: #dc2626; color: white; }
         .btn-amber { background: #d97706; color: white; }
-        .btn-sm { padding: 5px 10px; font-size: 0.78rem; border-radius: 6px; }
+        .btn-sm { padding: 4px 8px; font-size: 0.78rem; border-radius: 6px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
+        /* TABEL COMPACT / RAPAT ELEGAN */
+        table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+        th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.825rem; }
         th { background: #f8fafc; color: var(--text-sub); font-weight: 600; }
 
-        /* STATISTIK TAMPILAN FOOTER TABEL PRESISI KANAN */
-        .stat-footer-row td { background-color: #f8fafc; border-top: 1px solid var(--border-color); }
+        /* STATISTIK FOOTER RAPAT */
+        .stat-footer-row td { background-color: #f8fafc; border-top: 1px solid var(--border-color); padding: 6px 12px; }
 
         /* REKAPITULASI EXCEL FORMAT */
         .excel-wrapper { overflow-x: auto; background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
         .excel-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; font-family: Arial, sans-serif; }
-        .excel-table th, .excel-table td { border: 1px solid #000; padding: 6px 8px; text-align: center; color: #000; }
+        .excel-table th, .excel-table td { border: 1px solid #000; padding: 5px 6px; text-align: center; color: #000; }
         .excel-table th { background-color: #f2f2f2; font-weight: bold; }
         .excel-table td.text-left { text-align: left; }
-        .v-text { writing-mode: vertical-lr; transform: rotate(180deg); white-space: nowrap; padding: 10px 4px !important; }
+        .v-text { writing-mode: vertical-lr; transform: rotate(180deg); white-space: nowrap; padding: 8px 3px !important; }
 
         /* MODAL DIALOG */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal.active { display: flex; }
         .modal-content { background: white; border-radius: 16px; width: 92%; max-width: 980px; max-height: 90vh; overflow-y: auto; padding: 0; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .modal-header { padding: 20px 24px 12px 24px; display: flex; justify-content: space-between; align-items: flex-start; }
-        .modal-title { font-size: 1.15rem; font-weight: 700; color: var(--text-title); }
-        .modal-sub { font-size: 0.825rem; color: var(--text-sub); margin-top: 2px; }
+        .modal-header { padding: 18px 24px 12px 24px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .modal-title { font-size: 1.1rem; font-weight: 700; color: var(--text-title); }
+        .modal-sub { font-size: 0.8rem; color: var(--text-sub); margin-top: 2px; }
         .btn-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-sub); padding: 4px 8px; border-radius: 6px; }
         
         .tab-nav { display: flex; border-bottom: 1px solid var(--border-color); padding: 0 24px; gap: 24px; }
-        .tab-btn { background: none; border: none; padding: 12px 0; font-size: 0.875rem; font-weight: 500; color: var(--text-sub); cursor: pointer; border-bottom: 2px solid transparent; }
+        .tab-btn { background: none; border: none; padding: 10px 0; font-size: 0.85rem; font-weight: 500; color: var(--text-sub); cursor: pointer; border-bottom: 2px solid transparent; }
         .tab-btn.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); font-weight: 600; }
         
-        .tab-body { padding: 24px; }
-        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; background: #f8fafc; border-radius: 0 0 16px 16px; }
+        .tab-body { padding: 20px 24px; }
+        .modal-footer { padding: 14px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; background: #f8fafc; border-radius: 0 0 16px 16px; }
 
         /* CSS PRINT (LANDSCAPE A4) */
         @media print {
@@ -283,16 +284,16 @@
             <!-- TABEL RINGKASAN PERFORMA DAN RINGKASAN KKM KANAN BAWAH -->
             <div class="extra-box-full">
                 <div class="chart-card-title" style="margin-bottom:12px;">🏆 Performa Siswa Nilai Tertinggi & Predikat</div>
-                <div style="max-height:380px; overflow-y:auto;">
+                <div style="max-height:360px; overflow-y:auto;">
                     <table>
                         <thead>
                             <tr>
-                                <th style="width:60px; text-align:center;">No</th>
+                                <th style="width:45px; text-align:center;">No</th>
                                 <th>Siswa Nilai Tertinggi</th>
-                                <th style="text-align:center; width:90px;">Nilai</th>
+                                <th style="text-align:center; width:80px;">Nilai</th>
                                 <th style="text-align:left;">Terbilang Huruf</th>
-                                <th style="text-align:center; width:130px;">Predikat</th>
-                                <th style="text-align:center; width:220px;" colspan="2">Ringkasan</th>
+                                <th style="text-align:center; width:110px;">Predikat</th>
+                                <th style="text-align:center; width:200px;" colspan="2">Ringkasan</th>
                             </tr>
                         </thead>
                         <tbody id="tbody-predikat-siswa"></tbody>
@@ -846,9 +847,9 @@
                             <td><strong>${s.nama}</strong></td>
                             <td style="text-align:center; font-weight:700; color:var(--primary-blue);">${valNum}</td>
                             <td style="text-align:left; font-size:0.8rem; color:var(--text-sub); font-style:italic;">${valText}</td>
-                            <td style="text-align:center;"><span style="background:${pred.bg}; color:${pred.color}; padding:3px 10px; border-radius:12px; font-weight:700; font-size:0.75rem;">${pred.text}</span></td>
-                            <td style="width:120px;"></td>
-                            <td style="width:100px;"></td>
+                            <td style="text-align:center;"><span style="background:${pred.bg}; color:${pred.color}; padding:2px 8px; border-radius:12px; font-weight:700; font-size:0.75rem;">${pred.text}</span></td>
+                            <td style="width:110px;"></td>
+                            <td style="width:80px;"></td>
                         </tr>
                     `;
                 });
@@ -856,7 +857,7 @@
                 const realMin = minNa === Infinity ? 0 : minNa;
                 const realMax = maxNa === -Infinity ? 0 : maxNa;
 
-                /* METODE TFOOT TERPISAH YANG MENEMPEL PRESISI PADA FOOTER KANAN */
+                /* TFOOTER SANGAT RAPAT DI KANAN BAWAH */
                 tfootStats.innerHTML = `
                     <tr class="stat-footer-row">
                         <td colspan="5" style="border:none;"></td>
@@ -926,7 +927,7 @@
                         <td>${(s.rataRapor || 0).toFixed(2)}</td>
                         <td>${(s.rataUM || 0).toFixed(2)}</td>
                         <td><strong style="color:var(--primary-blue);">${(s.na || 0).toFixed(2)}</strong></td>
-                        <td><span style="background:${stBg}; color:${stTxt}; padding:4px 10px; border-radius:12px; font-weight:700; font-size:0.75rem;">${s.status}</span></td>
+                        <td><span style="background:${stBg}; color:${stTxt}; padding:2px 8px; border-radius:12px; font-weight:700; font-size:0.75rem;">${s.status}</span></td>
                         <td style="text-align:right;">
                             <button class="btn btn-outline btn-sm" onclick="editSiswa(${dbIndex})">✏️ Edit</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteSiswa(${dbIndex})">🗑️ Hapus</button>
@@ -997,7 +998,7 @@
                 for (let s = 1; s <= totalSem; s++) {
                     const val = savedVals[s - 1] !== undefined ? savedVals[s - 1] : 0;
                     tbodyHTML += `<td style="text-align:center;">
-                        <input type="number" class="form-input inp-rapor" data-mapel="${m}" data-sem="${s - 1}" value="${val}" min="0" max="100" style="width:55px; padding:4px; text-align:center;" onchange="updateLivePreview()">
+                        <input type="number" class="form-input inp-rapor" data-mapel="${m}" data-sem="${s - 1}" value="${val}" min="0" max="100" style="width:50px; padding:4px; text-align:center;" onchange="updateLivePreview()">
                     </td>`;
                 }
 
@@ -1017,9 +1018,9 @@
             mapelList.forEach((m) => {
                 const val = (siswa && siswa.um && siswa.um[m] !== undefined) ? siswa.um[m] : 0;
                 container.innerHTML += `
-                    <div style="background:#f8fafc; padding:10px 12px; border-radius:8px; border:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                    <div style="background:#f8fafc; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
                         <label style="font-size:0.825rem; font-weight:600;">${m}</label>
-                        <input type="number" class="form-input inp-um" data-mapel="${m}" value="${val}" min="0" max="100" style="width:70px; text-align:center;" onchange="updateLivePreview()">
+                        <input type="number" class="form-input inp-um" data-mapel="${m}" value="${val}" min="0" max="100" style="width:65px; text-align:center;" onchange="updateLivePreview()">
                     </div>
                 `;
             });
