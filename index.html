@@ -281,7 +281,7 @@
                 </div>
             </div>
 
-            <!-- RINGKASAN TAMBAHAN DENGAN POLA SESUAI PERMINTAAN -->
+            <!-- RINGKASAN TAMBAHAN -->
             <div class="grid-extra-dash">
                 <!-- SEBELAH KIRI: KHUSUS NAMA SISWA SAJA -->
                 <div class="extra-box">
@@ -636,6 +636,7 @@
             localStorage.setItem('nk_config', JSON.stringify(appConfig));
             loadConfig();
             recalculateData();
+            renderDashboard();
             alert('Pengaturan berhasil disimpan!');
         }
 
@@ -758,11 +759,18 @@
             return hasil;
         }
 
-        /* FUNGSI PENENTU PREDIKAT */
+        /* FUNGSI PENENTU PREDIKAT OTOMATIS SESUAI KKM DINAMIS */
         function getPredikat(val) {
-            if (val >= 91) return { text: 'Sangat Baik', color: '#10b981', bg: '#dcfce7' };
-            if (val >= 81) return { text: 'Baik', color: '#2563eb', bg: '#dbeafe' };
-            if (val >= 75) return { text: 'Cukup', color: '#d97706', bg: '#fef3c7' };
+            const kkm = parseFloat(appConfig.kkm) || 75;
+            const interval = (100 - kkm) / 3;
+
+            const bCukup = kkm;
+            const bBaik = kkm + interval;
+            const bSangatBaik = kkm + (2 * interval);
+
+            if (val >= bSangatBaik) return { text: 'Sangat Baik', color: '#10b981', bg: '#dcfce7' };
+            if (val >= bBaik) return { text: 'Baik', color: '#2563eb', bg: '#dbeafe' };
+            if (val >= bCukup) return { text: 'Cukup', color: '#d97706', bg: '#fef3c7' };
             return { text: 'Kurang', color: '#dc2626', bg: '#fee2e2' };
         }
 
@@ -825,7 +833,7 @@
                 `;
             });
 
-            /* SEBELAH KIRI: KHUSUS NAMA SISWA KELIHATAN BERSIH (TANPA NIM/JENJANG/EDIT) */
+            /* SEBELAH KIRI: KHUSUS NAMA SISWA KELIHATAN BERSIH */
             const topBox = document.getElementById('top-students-list');
             topBox.innerHTML = '';
             let sortedSiswa = [...siswaDb].sort((a,b) => (b.na||0) - (a.na||0));
