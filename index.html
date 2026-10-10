@@ -37,6 +37,30 @@
         .nav-btn.active { background-color: var(--sidebar-active-bg); color: var(--sidebar-active-text); font-weight: 600; }
         .sidebar-footer { padding-left: 8px; font-size: 0.75rem; color: #64748b; line-height: 1.4; }
 
+        /* SUB-MENU SIDEBAR */
+        .sub-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 2px;
+            margin-bottom: 4px;
+        }
+        .sub-menu .sub-btn {
+            font-size: 0.825rem;
+            padding: 8px 12px;
+            color: #94a3b8;
+            border-radius: 6px;
+        }
+        .sub-menu .sub-btn:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+        .sub-menu .sub-btn.active-sub {
+            color: #ffffff;
+            font-weight: 600;
+            background-color: rgba(37, 99, 235, 0.4);
+        }
+
         /* MAIN CONTENT */
         #main-content { flex: 1; overflow-y: auto; padding: 28px 32px; }
         .top-header-card { background: var(--card-bg); border-radius: 12px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
@@ -121,7 +145,15 @@
 
             <div class="nav-menu">
                 <button class="nav-btn active" onclick="showPage('page-dashboard', this)">📊 Dashboard</button>
-                <button class="nav-btn" onclick="showPage('page-master-siswa', this)">🎓 Master Data & Nilai</button>
+                
+                <!-- MASTER DATA DENGAN SUB-MENU SUB-JENJANG -->
+                <button class="nav-btn" id="btn-master-parent" onclick="toggleSubMenu('sub-master', this)">🎓 Master Data & Nilai <span id="arrow-master" style="float:right; font-size:0.75rem;">▼</span></button>
+                <div id="sub-master" class="sub-menu" style="display: none; padding-left: 20px;">
+                    <button class="nav-btn sub-btn" onclick="filterByJenjangSidebar('MI', this)">▸ Jenjang MI</button>
+                    <button class="nav-btn sub-btn" onclick="filterByJenjangSidebar('MTs', this)">▸ Jenjang MTs</button>
+                    <button class="nav-btn sub-btn" onclick="filterByJenjangSidebar('MA', this)">▸ Jenjang MA</button>
+                </div>
+
                 <button class="nav-btn" onclick="showPage('page-rekapitulasi', this)">📄 Rekapitulasi Nilai</button>
                 <button class="nav-btn" onclick="showPage('page-backup', this)">💽 Backup & Restore</button>
                 <button class="nav-btn" onclick="showPage('page-pengaturan', this)">⚙️ Pengaturan Sekolah</button>
@@ -182,7 +214,6 @@
                     <div style="display:flex; gap:10px; flex:1; min-width:320px;">
                         <input type="text" id="search-input" class="form-input" style="max-width:240px;" placeholder="Cari NISN atau Nama Siswa..." onkeyup="renderSiswaTable()">
                         
-                        <!-- FILTER JENJANG TERURUT: MI, MTs, MA -->
                         <select id="filter-jenjang" class="form-input" style="max-width:180px;" onchange="renderSiswaTable()">
                             <option value="ALL">Semua Jenjang</option>
                             <option value="MI">MI (12 Semester)</option>
@@ -427,11 +458,36 @@
             updateStorageSize();
         });
 
+        function toggleSubMenu(id, btnEl) {
+            const sub = document.getElementById(id);
+            const arrow = document.getElementById('arrow-master');
+            const isOpen = sub.style.display === 'block';
+            sub.style.display = isOpen ? 'none' : 'block';
+            arrow.innerText = isOpen ? '▼' : '▲';
+            showPage('page-master-siswa', btnEl);
+        }
+
+        function filterByJenjangSidebar(jenjang, btnEl) {
+            showPage('page-master-siswa', document.getElementById('btn-master-parent'));
+            document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active-sub'));
+            if (btnEl) btnEl.classList.add('active-sub');
+
+            const filterSelect = document.getElementById('filter-jenjang');
+            if (filterSelect) {
+                filterSelect.value = jenjang;
+                renderSiswaTable();
+            }
+        }
+
         function showPage(pageId, btnEl) {
             document.querySelectorAll('.page-view').forEach(p => p.style.display = 'none');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(pageId).style.display = 'block';
             if (btnEl) btnEl.classList.add('active');
+
+            if (pageId !== 'page-master-siswa') {
+                document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active-sub'));
+            }
 
             if (pageId === 'page-dashboard') renderDashboard();
             if (pageId === 'page-master-siswa') renderSiswaTable();
