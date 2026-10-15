@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengelolaan Nilai</title>
+    <title>NilaiKita Offline</title>
     <style>
         :root {
             --sidebar-bg: #1e293b;
@@ -129,17 +129,18 @@
         .tab-body { padding: 20px 24px; }
         .modal-footer { padding: 14px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; background: #f8fafc; border-radius: 0 0 16px 16px; }
 
-        /* CSS PRINT (LANDSCAPE A4) */
-        @media print {
-            @page {
-                size: A4 landscape;
-                margin: 8mm;
-            }
+        /* CSS PRINT DIPERBAIKI (STANDAR CETAK LANDSCAPE LURUS) */
+        @page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
 
-            body {
-                background: white !important;
-                color: black !important;
+        @media print {
+            html, body {
+                width: 100% !important;
                 height: auto !important;
+                background: #ffffff !important;
+                color: #000000 !important;
                 overflow: visible !important;
             }
 
@@ -151,6 +152,7 @@
                 padding: 0 !important;
                 margin: 0 !important;
                 overflow: visible !important;
+                width: 100% !important;
             }
 
             .page-view {
@@ -159,6 +161,7 @@
 
             #page-rekapitulasi {
                 display: block !important;
+                width: 100% !important;
             }
 
             .excel-wrapper {
@@ -166,16 +169,18 @@
                 padding: 0 !important;
                 box-shadow: none !important;
                 width: 100% !important;
+                background: white !important;
             }
 
             .excel-table {
                 width: 100% !important;
-                font-size: 7.5pt !important;
+                font-size: 8pt !important;
+                border-collapse: collapse !important;
             }
 
             .excel-table th, .excel-table td {
-                border: 1px solid #000 !important;
-                padding: 3px 2px !important;
+                border: 1px solid #000000 !important;
+                padding: 4px 3px !important;
             }
         }
     </style>
@@ -186,8 +191,8 @@
     <div id="sidebar">
         <div>
             <div class="brand-section">
-                <div class="brand-title">Pengelolaan Nilai</div>
-                <div class="brand-subtitle">Pengembang: DARMAWAN SUDARSO, S.Pd.I</div>
+                <div class="brand-title">NilaiKita Offline</div>
+                <div class="brand-subtitle">Pengembang: DARMAWAN SUDARSO</div>
             </div>
 
             <div class="nav-menu">
@@ -858,7 +863,6 @@
                 const realMin = minNa === Infinity ? 0 : minNa;
                 const realMax = maxNa === -Infinity ? 0 : maxNa;
 
-                /* TFOOTER DI RAPIKAN DI KANAN DENGAN AREA LUAS */
                 tfootStats.innerHTML = `
                     <tr class="stat-footer-row">
                         <td colspan="5" style="border:none;"></td>
