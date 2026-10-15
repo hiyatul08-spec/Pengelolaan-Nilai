@@ -129,8 +129,9 @@
         .tab-body { padding: 20px 24px; }
         .modal-footer { padding: 14px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; background: #f8fafc; border-radius: 0 0 16px 16px; }
 
-        /* CSS PRINT DI-PERBAIKI PERSISI (TIDAK ADA GARIS TERPUTUS) */
+        /* CSS PRINT DIPERBAIKI (PAKSA LANDSCAPE + BORDER UTUH) */
         @page {
+            size: landscape;
             margin: 8mm;
         }
 
@@ -174,16 +175,12 @@
             .excel-table {
                 width: 100% !important;
                 font-size: 8pt !important;
-                border-collapse: separate !important;
-                border-spacing: 0 !important;
+                border-collapse: collapse !important;
                 border: 1px solid #000000 !important;
             }
 
             .excel-table th, .excel-table td {
-                border-right: 1px solid #000000 !important;
-                border-bottom: 1px solid #000000 !important;
-                border-top: none !important;
-                border-left: none !important;
+                border: 1px solid #000000 !important;
                 padding: 4px 3px !important;
                 box-sizing: border-box !important;
             }
