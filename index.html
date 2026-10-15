@@ -107,8 +107,8 @@
 
         /* REKAPITULASI EXCEL FORMAT LAYAR LAUT */
         .excel-wrapper { overflow-x: auto; background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); }
-        .excel-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; font-family: Arial, sans-serif; }
-        .excel-table th, .excel-table td { border: 1px solid #000000; padding: 6px 8px; text-align: center; color: #000; }
+        .excel-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; font-family: Arial, sans-serif; table-layout: fixed; }
+        .excel-table th, .excel-table td { border: 1px solid #000000 !important; padding: 6px 4px; text-align: center; color: #000; box-sizing: border-box; }
         .excel-table th { background-color: #f2f2f2; font-weight: bold; }
         .excel-table td.text-left { text-align: left; }
         .v-text { writing-mode: vertical-lr; transform: rotate(180deg); white-space: nowrap; padding: 8px 3px !important; }
@@ -129,7 +129,7 @@
         .tab-body { padding: 20px 24px; }
         .modal-footer { padding: 14px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; background: #f8fafc; border-radius: 0 0 16px 16px; }
 
-        /* CSS PRINT DI-PERBAIKI PERSISI (TIDAK ADA GARIS TERPUTUS) */
+        /* PERBAIKAN CSS CETAK - GARIS TERTUTUP RAPI & UTUH */
         @page {
             margin: 8mm;
         }
@@ -174,18 +174,20 @@
             .excel-table {
                 width: 100% !important;
                 font-size: 8pt !important;
-                border-collapse: separate !important;
-                border-spacing: 0 !important;
+                border-collapse: collapse !important;
                 border: 1px solid #000000 !important;
+                table-layout: auto !important;
             }
 
             .excel-table th, .excel-table td {
-                border-right: 1px solid #000000 !important;
-                border-bottom: 1px solid #000000 !important;
-                border-top: none !important;
-                border-left: none !important;
-                padding: 4px 3px !important;
+                border: 1px solid #000000 !important;
+                padding: 5px 3px !important;
                 box-sizing: border-box !important;
+            }
+
+            .excel-table thead th {
+                border-top: 1px solid #000000 !important;
+                border-bottom: 1px solid #000000 !important;
             }
         }
     </style>
@@ -1140,7 +1142,7 @@
             const tfoot = document.getElementById('rekap-tfoot');
             const count = mapelList.length;
 
-            let h1 = `<tr><th rowspan="2" style="width:30px;">NO.</th><th rowspan="2" style="min-width:160px;">NAMA</th><th rowspan="2">NISN</th><th colspan="${count}">MATA PELAJARAN</th><th rowspan="2" class="v-text">JUMLAH</th><th rowspan="2" class="v-text">RATA-RATA</th><th rowspan="2" class="v-text">RANKING</th></tr>`;
+            let h1 = `<tr><th rowspan="2" style="width:35px;">NO.</th><th rowspan="2" style="min-width:180px;">NAMA</th><th rowspan="2" style="width:90px;">NISN</th><th colspan="${count}">MATA PELAJARAN</th><th rowspan="2" class="v-text">JUMLAH</th><th rowspan="2" class="v-text">RATA-RATA</th><th rowspan="2" class="v-text">RANKING</th></tr>`;
             let h2 = `<tr>`;
             mapelList.forEach(m => h2 += `<th class="v-text">${m}</th>`);
             h2 += `</tr>`;
@@ -1155,7 +1157,7 @@
             let filteredRekap = siswaDb.filter(s => selectedJenjangActive === 'ALL' || (s.jenjang || 'MTs') === selectedJenjangActive);
 
             if (filteredRekap.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${count + 6}">Belum ada data siswa.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${count + 6}" style="padding:12px; text-align:center;">Belum ada data siswa.</td></tr>`;
                 tfoot.innerHTML = '';
                 return;
             }
